@@ -158,7 +158,6 @@ def to_code(config):
     if CONF_COMPRESSOR_FREQUENCY in config:
         conf = config[CONF_COMPRESSOR_FREQUENCY]
         sens = yield sensor.new_sensor(conf)
-        # yield cg.register_component(sens, conf)
         cg.add(var.set_compressor_frequency_sensor(sens))
 
     yield cg.register_component(var, config)

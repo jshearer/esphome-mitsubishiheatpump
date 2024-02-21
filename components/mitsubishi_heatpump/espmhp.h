@@ -102,7 +102,7 @@ class MitsubishiHeatPump : public esphome::PollingComponent, public esphome::cli
         // set_remote_temp(0) to switch back to the internal sensor.
         void set_remote_temperature(float);
 
-        void set_compressor_frequency_sensor(sensor::Sensor *sensor) { this->compressor_frequency_sensor_ = sensor; };
+        void set_compressor_frequency_sensor(esphome::sensor::Sensor *sensor) { this->compressor_frequency_sensor_ = sensor; };
 
         void set_vertical_vane_select(esphome::select::Select *vertical_vane_select);
         void set_horizontal_vane_select(esphome::select::Select *horizontal_vane_select);
@@ -144,7 +144,7 @@ class MitsubishiHeatPump : public esphome::PollingComponent, public esphome::cli
             return this->hw_serial_;
         }
 
-        sensor::Sensor *compressor_frequency_sensor_{nullptr};
+        esphome::sensor::Sensor *compressor_frequency_sensor_{nullptr};
 
         //Print a warning message if we're using the sole hardware UART on an
         //ESP8266 or UART0 on ESP32
