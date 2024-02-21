@@ -606,9 +606,10 @@ void MitsubishiHeatPump::hpStatusChanged(heatpumpStatus currentStatus) {
 
     this->operating_ = currentStatus.operating;
 
-    this->publish_state();
-
     set_sensor(this->compressor_frequency_sensor_, currentStatus.compressorFrequency);
+    ESP_LOGD(TAG, "Got compressor freq: %.1f", currentStatus.compressorFrequency);
+
+    this->publish_state();
 }
 
 void MitsubishiHeatPump::set_remote_temperature(float temp) {
