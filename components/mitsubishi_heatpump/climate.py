@@ -1,6 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components import climate, select
+from esphome.components import climate, select, sensor
 from esphome.components.logger import HARDWARE_UART_TO_SERIAL
 from esphome.const import (
     CONF_ID,
@@ -18,6 +18,7 @@ from esphome.core import CORE, coroutine
 AUTO_LOAD = ["climate", "select"]
 
 CONF_SUPPORTS = "supports"
+CONF_COMPRESSOR_FREQUENCY = "compressor_frequency"
 CONF_HORIZONTAL_SWING_SELECT = "horizontal_vane_select"
 CONF_VERTICAL_SWING_SELECT = "vertical_vane_select"
 DEFAULT_CLIMATE_MODES = ["HEAT_COOL", "COOL", "HEAT", "DRY", "FAN_ONLY"]
@@ -80,6 +81,13 @@ CONFIG_SCHEMA = climate.CLIMATE_SCHEMA.extend(
        # Add selects for vertical and horizontal vane positions
        cv.Optional(CONF_HORIZONTAL_SWING_SELECT): SELECT_SCHEMA,
        cv.Optional(CONF_VERTICAL_SWING_SELECT): SELECT_SCHEMA,
+       cv.Optional(CONF_COMPRESSOR_FREQUENCY): sensor.sensor_schema(
+            unit_of_measurement="hz",
+            #icon=ICON_POWER,
+            accuracy_decimals=0,
+            #device_class=DEVICE_CLASS_POWER,
+            #state_class=STATE_CLASS_MEASUREMENT,
+        ),
         # Optionally override the supported ClimateTraits.
         cv.Optional(CONF_SUPPORTS, default={}): cv.Schema(
             {
@@ -146,6 +154,12 @@ def to_code(config):
         swing_select = yield select.new_select(conf, options=VERTICAL_SWING_OPTIONS)
         yield cg.register_component(swing_select, conf)
         cg.add(var.set_vertical_vane_select(swing_select))
+    
+    if CONF_COMPRESSOR_FREQUENCY in config:
+        conf = config[CONF_COMPRESSOR_FREQUENCY]
+        sens = yield sensor.new_sensor(conf)
+        yield cg.register_component(sens, conf)
+        cg.add(var.set_compressor_frequency_sensor(sens))
 
     yield cg.register_component(var, config)
     yield climate.register_climate(var, config)

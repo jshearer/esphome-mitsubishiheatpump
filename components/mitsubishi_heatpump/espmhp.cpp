@@ -21,6 +21,11 @@
 #include "espmhp.h"
 using namespace esphome;
 
+static void set_sensor(sensor::Sensor *sensor, float value) {
+  if (sensor != nullptr && (!sensor->has_state() || sensor->get_raw_state() != value))
+    sensor->publish_state(value);
+}
+
 /**
  * Create a new MitsubishiHeatPump object
  *
@@ -602,6 +607,8 @@ void MitsubishiHeatPump::hpStatusChanged(heatpumpStatus currentStatus) {
     this->operating_ = currentStatus.operating;
 
     this->publish_state();
+
+    set_sensor(this->compressor_frequency_sensor_, currentStatus.compressorFrequency);
 }
 
 void MitsubishiHeatPump::set_remote_temperature(float temp) {
