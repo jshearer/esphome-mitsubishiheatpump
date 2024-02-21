@@ -165,5 +165,5 @@ def to_code(config):
     cg.add_library(
         name="HeatPump",
         repository="https://github.com/jshearer/HeatPump",
-        # version="d6a29134401d7caae1b8fca9c452c8eb92af60c5",
+        version="b6e3a81a4f0d94ac1d436bd736fb603ace22964c",
     )
